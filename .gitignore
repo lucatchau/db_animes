@@ -1,0 +1,5 @@
+.venv/
+data_anime_parquet/
+data_fact_parquet/
+__pycache__/
+pipeline_exec.log
