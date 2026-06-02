@@ -5,7 +5,8 @@ from extract import extract_data
 from transform import transform_save
 from database import save_to_database
 import os
-os.environ['HADOOP_HOME'] = r'C:\Users\Lucat\Downloads\test\hadoop'
+
+os.environ['HADOOP_HOME'] = r'C:\Users\berger\Downloads\test\hadoop'
 
 logging.basicConfig(
     level=logging.INFO,

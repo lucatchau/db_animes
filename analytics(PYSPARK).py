@@ -14,8 +14,8 @@ spark = SparkSession.builder \
 
 # 3. On charge nos dossiers Parquet
 print("Chargement des données Parquet...")
-df_anime = spark.read.parquet("data_anime_parquet")
-df_fact = spark.read.parquet("data_fact_parquet")
+df_anime = spark.read.format("delta").load("data_anime_delta")
+df_fact = spark.read.format("delta").load("data_fact_delta")
 df_anime.createOrReplaceTempView("view_anime")
 df_fact.createOrReplaceTempView("view_fact")
 

@@ -2,6 +2,9 @@ import pandas as pd
 from pyspark.sql import SparkSession
 from pyspark.sql.types import StructType, StructField, IntegerType, StringType, BooleanType, FloatType, ArrayType
 from pyspark.sql.functions import when, col
+from database import zone_bronze
+from delta import configure_spark_with_delta_pip
+
 
 schema_entite = StructType([
     StructField("mal_id", IntegerType(), True),
@@ -40,11 +43,17 @@ def categoriser_anime(type_brut):
 
 def transform_save(liste_donnees_brute):
     spark = SparkSession.builder \
-    .master("local") \
-    .appName("Projet Anime") \
-    .getOrCreate()
+        .master("local") \
+        .appName("Projet Anime") \
+        .config("spark.sql.extensions", "io.delta.sql.DeltaSparkSessionExtension") \
+        .config("spark.sql.catalog.spark_catalog", "org.apache.spark.sql.delta.catalog.DeltaCatalog") \
+  
+    spark = configure_spark_with_delta_pip(builder).getOrCreate()
+
+    
     # Création du DataFrame
     df_animes = spark.createDataFrame(liste_donnees_brute, schema=schema)
+    zone_bronze(df_animes)  # Sauvegarde dans la zone bronze avant transformation
     # METHODE PANDAS : fact_stats = df_animes[['mal_id', 'episodes', 'rank', 'score', 'favorites']] 
 
     fact_stats = df_animes.select('mal_id', 'episodes', 'rank', 'score', 'favorites') # METHODE SPARK 
