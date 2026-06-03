@@ -6,3 +6,6 @@ def zone_silver(dim_stats, fact_stats):
 
 def zone_bronze(df_anime):
     df_anime.write.mode("overwrite").format("delta").saveAsTable("data_anime_bronze") 
+
+def zone_gold(df_moyenne):
+    df_moyenne.write.mode("overwrite").format("delta").saveAsTable("data_anime_gold") 
