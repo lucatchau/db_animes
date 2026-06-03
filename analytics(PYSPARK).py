@@ -2,20 +2,15 @@ import os
 from pyspark.sql import SparkSession
 from pyspark.sql.functions import avg, round
 
-# 1. On force la variable d'environnement pour Windows
-os.environ['HADOOP_HOME'] = r'C:\Users\Lucat\Downloads\test\hadoop'
-
 # 2. On démarre notre session Spark
 spark = SparkSession.builder \
     .appName("AnimeAnalytics") \
     .getOrCreate()
 
-
-
 # 3. On charge nos dossiers Parquet
 print("Chargement des données Parquet...")
-df_anime = spark.read.format("delta").load("data_anime_delta")
-df_fact = spark.read.format("delta").load("data_fact_delta")
+df_anime = spark.read.table("data_anime_silver")
+df_fact = spark.read.table("data_fact_silver")
 df_anime.createOrReplaceTempView("view_anime")
 df_fact.createOrReplaceTempView("view_fact")
 

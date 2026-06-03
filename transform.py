@@ -4,6 +4,7 @@ from pyspark.sql.types import StructType, StructField, IntegerType, StringType, 
 from pyspark.sql.functions import when, col
 from database import zone_bronze
 from delta import configure_spark_with_delta_pip
+from pyspark.sql import SparkSession
 
 
 schema_entite = StructType([
@@ -42,14 +43,7 @@ def categoriser_anime(type_brut):
         
 
 def transform_save(liste_donnees_brute):
-    spark = SparkSession.builder \
-        .master("local") \
-        .appName("Projet Anime") \
-        .config("spark.sql.extensions", "io.delta.sql.DeltaSparkSessionExtension") \
-        .config("spark.sql.catalog.spark_catalog", "org.apache.spark.sql.delta.catalog.DeltaCatalog") \
-  
-    spark = configure_spark_with_delta_pip(builder).getOrCreate()
-
+    spark = SparkSession.builder.getOrCreate()
     
     # Création du DataFrame
     df_animes = spark.createDataFrame(liste_donnees_brute, schema=schema)
